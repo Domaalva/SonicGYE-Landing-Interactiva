@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SonicGYE — Música Independiente de Guayaquil</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Bebas Neue', 'sans-serif'],
+            body: ['DM Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              sky:    '#1E9DD9',
+              dark:   '#0A0A0A',
+              card:   '#111111',
+              border: '#222222',
+              muted:  '#888888',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #0A0A0A; color: #F0F0F0; }
+    h1,h2,h3,h4,h5 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; }
+    .hero-bg {
+      background-image: linear-gradient(to bottom, rgba(10,10,10,0.5) 0%, rgba(10,10,10,0.97) 100%),
+        url('https://picsum.photos/id/1041/1600/1200');
+      background-size: cover;
+      background-position: center;
+    }
+    .card-hover { transition: transform 0.25s ease, border-color 0.25s ease; }
+    .card-hover:hover { transform: translateY(-4px); border-color: #1E9DD9; }
+    .nav-link { position: relative; cursor: pointer; }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px;
+      background: #1E9DD9; transition: width 0.25s ease;
+    }
+    .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+    .nav-link.active { color: #fff; }
+    .play-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #1E9DD9; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background 0.2s, transform 0.2s;
+    }
+    .play-btn:hover { background: #1480b5; transform: scale(1.06); }
+    .badge {
+      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #1E9DD9; border: 1px solid #1E9DD9;
+      padding: 2px 10px; border-radius: 999px; display: inline-block;
+    }
+    .scroll-fade { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .scroll-fade.visible { opacity: 1; transform: translateY(0); }
+    input, select, textarea { background: #1a1a1a; border: 1px solid #333; color: #f0f0f0; }
+    input::placeholder, textarea::placeholder { color: #666; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #1E9DD9; box-shadow: 0 0 0 3px rgba(30,157,217,0.18); }
+    input.field-invalid, select.field-invalid, textarea.field-invalid { border-color: #ef4444; }
+    select option { background: #1a1a1a; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    html { scroll-behavior: smooth; }
+    .msg-enter { animation: msgEnter 0.4s ease forwards; }
+    @keyframes msgEnter { from { opacity:0; transform: translateX(-10px); } to { opacity:1; transform: translateX(0); } }
+    .spinner {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="antialiased">
+ 
+  <!-- ===== NAVBAR ===== -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-brand-dark/90 backdrop-blur-sm border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="#inicio" class="flex items-center gap-2">
+        <span class="text-brand-sky text-3xl" style="font-family:'Bebas Neue',sans-serif; line-height:1;">SONIC</span>
+        <span class="text-white text-3xl" style="font-family:'Bebas Neue',sans-serif; line-height:1;">GYE</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-brand-muted">
+        <a href="#inicio"      data-section="inicio"      class="nav-link hover:text-white transition-colors">Inicio</a>
+        <a href="#artistas"    data-section="artistas"    class="nav-link hover:text-white transition-colors">Artistas</a>
+        <a href="#lanzamientos" data-section="lanzamientos" class="nav-link hover:text-white transition-colors">Lanzamientos</a>
+        <a href="#eventos"     data-section="eventos"     class="nav-link hover:text-white transition-colors">Eventos</a>
+        <a href="#contacto"    data-section="contacto"    class="nav-link hover:text-white transition-colors">Contacto</a>
+      </div>
+      <a href="#contacto" class="hidden md:inline-flex items-center gap-2 bg-brand-sky text-white text-sm font-medium px-5 py-2 rounded-full hover:bg-sky-600 transition-colors">
+        Unirme
+      </a>
+      <button id="menuBtn" class="md:hidden text-white" aria-label="Menú">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden flex-col bg-brand-dark border-t border-brand-border px-6 py-4 gap-4 text-sm text-brand-muted">
+      <a href="#inicio"      data-section="inicio"      class="nav-link hover:text-white transition-colors py-1">Inicio</a>
+      <a href="#artistas"    data-section="artistas"    class="nav-link hover:text-white transition-colors py-1">Artistas</a>
+      <a href="#lanzamientos" data-section="lanzamientos" class="nav-link hover:text-white transition-colors py-1">Lanzamientos</a>
+      <a href="#eventos"     data-section="eventos"     class="nav-link hover:text-white transition-colors py-1">Eventos</a>
+      <a href="#contacto"    data-section="contacto"    class="nav-link hover:text-white transition-colors py-1">Contacto</a>
+    </div>
+  </nav>
+ 
+  <!-- ===== HERO / INICIO ===== -->
+  <section id="inicio" class="hero-bg min-h-screen pt-16 flex items-center">
+    <div class="max-w-7xl mx-auto px-6 py-32 w-full">
+      <div class="max-w-2xl">
+        <span class="badge mb-6">Plataforma independiente · Guayaquil</span>
+        <h1 class="text-7xl sm:text-8xl md:text-9xl text-white leading-none mb-6">
+          TU<br/><span class="text-brand-sky">MÚSICA.</span><br/>TU VOZ.
+        </h1>
+        <p class="text-brand-muted text-lg leading-relaxed mb-10 max-w-xl">
+          SonicGYE conecta a músicos independientes de Guayaquil con su audiencia local. Publica, distribuye y vende tu música sin intermediarios.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="#lanzamientos" class="bg-brand-sky text-white font-medium px-8 py-3 rounded-full hover:bg-sky-600 transition-colors">
+            Explorar música
+          </a>
+          <a href="#contacto" class="border border-white/30 text-white font-medium px-8 py-3 rounded-full hover:border-white hover:bg-white/5 transition-all">
+            Subir mi música
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ===== PROPUESTA DE VALOR (lista + imagen + texto) ===== -->
+  <section class="py-24">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
+      <div class="scroll-fade">
+        <img src="https://picsum.photos/id/1062/700/875" alt="Artistas independientes de Guayaquil en concierto" class="rounded-2xl w-full object-cover aspect-[4/5]"/>
+      </div>
+      <div class="scroll-fade" style="transition-delay:0.1s">
+        <span class="badge mb-4">¿Por qué SonicGYE?</span>
+        <h2 class="text-5xl text-white mb-6 leading-tight">Hecho por y para<br/>el talento local</h2>
+        <p class="text-brand-muted leading-relaxed mb-6">
+          Decenas de bandas y solistas guayaquileños ya usan SonicGYE para publicar su música y llegar directamente a su ciudad, sin depender de algoritmos globales ni sellos discográficos.
+        </p>
+        <ul class="space-y-3 text-sm text-brand-muted">
+          <li class="flex items-center gap-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-sky flex-shrink-0"></span>
+            340+ artistas independientes registrados
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-sky flex-shrink-0"></span>
+            1,200+ canciones publicadas sin intermediarios
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-sky flex-shrink-0"></span>
+            Algoritmo que prioriza talento de Guayaquil
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-sky flex-shrink-0"></span>
+            Pagos directos: el artista se queda con el 90%
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ===== ÚLTIMOS LANZAMIENTOS (multi-artista) ===== -->
+  <section id="lanzamientos" class="py-24 bg-[#0d0d0d]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="mb-12 scroll-fade flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div>
+          <span class="badge mb-3">Nuevo</span>
+          <h2 class="text-6xl text-white">Últimos<br/>Lanzamientos</h2>
+        </div>
+        <div class="relative w-full md:w-72">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-brand-muted absolute left-4 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" id="searchLanzamientos" placeholder="Buscar canción o artista..." class="w-full pl-11 pr-4 py-2.5 rounded-full text-sm"/>
+        </div>
+      </div>
+      <p id="noResultsLanzamientos" class="hidden text-brand-muted text-sm italic mb-6">No se encontraron resultados.</p>
+      <div id="lanzamientosGrid" class="grid grid-cols-2 md:grid-cols-4 gap-5">
+        <div class="track-card card-hover bg-brand-card border border-brand-border rounded-xl overflow-hidden scroll-fade" data-song="Marea Baja" data-artist="Los Cantores del Río">
+          <div class="relative">
+            <img src="https://picsum.photos/id/1059/400/400" alt="Portada Marea Baja" class="w-full aspect-square object-cover"/>
+            <button class="play-btn absolute bottom-3 right-3" data-track-id="marea-baja" aria-label="Reproducir Marea Baja">
+              <svg class="icon-play w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="icon-pause w-4 h-4 text-white hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+            </button>
+          </div>
+          <div class="p-4">
+            <p class="font-medium text-sm text-white">Marea Baja</p>
+            <p class="text-brand-muted text-xs mt-0.5">Los Cantores del Río</p>
+          </div>
+        </div>
+        <div class="track-card card-hover bg-brand-card border border-brand-border rounded-xl overflow-hidden scroll-fade" style="transition-delay:0.1s" data-song="Puerto Real" data-artist="Valeria Estrada">
+          <div class="relative">
+            <img src="https://picsum.photos/id/1025/400/400" alt="Portada Puerto Real" class="w-full aspect-square object-cover"/>
+            <button class="play-btn absolute bottom-3 right-3" data-track-id="puerto-real" aria-label="Reproducir Puerto Real">
+              <svg class="icon-play w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="icon-pause w-4 h-4 text-white hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+            </button>
+          </div>
+          <div class="p-4">
+            <p class="font-medium text-sm text-white">Puerto Real</p>
+            <p class="text-brand-muted text-xs mt-0.5">Valeria Estrada</p>
+          </div>
+        </div>
+        <div class="track-card card-hover bg-brand-card border border-brand-border rounded-xl overflow-hidden scroll-fade" style="transition-delay:0.2s" data-song="Ciudad Gris" data-artist="Antena 5 Indie">
+          <div class="relative">
+            <img src="https://picsum.photos/id/1074/400/400" alt="Portada Ciudad Gris" class="w-full aspect-square object-cover"/>
+            <button class="play-btn absolute bottom-3 right-3" data-track-id="ciudad-gris" aria-label="Reproducir Ciudad Gris">
+              <svg class="icon-play w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="icon-pause w-4 h-4 text-white hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+            </button>
+          </div>
+          <div class="p-4">
+            <p class="font-medium text-sm text-white">Ciudad Gris</p>
+            <p class="text-brand-muted text-xs mt-0.5">Antena 5 Indie</p>
+          </div>
+        </div>
+        <div class="track-card card-hover bg-brand-card border border-brand-border rounded-xl overflow-hidden scroll-fade" style="transition-delay:0.3s" data-song="Guayas Flow" data-artist="MC Portete">
+          <div class="relative">
+            <img src="https://picsum.photos/id/1080/400/400" alt="Portada Guayas Flow" class="w-full aspect-square object-cover"/>
+            <button class="play-btn absolute bottom-3 right-3" data-track-id="guayas-flow" aria-label="Reproducir Guayas Flow">
+              <svg class="icon-play w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="icon-pause w-4 h-4 text-white hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+            </button>
+          </div>
+          <div class="p-4">
+            <p class="font-medium text-sm text-white">Guayas Flow</p>
+            <p class="text-brand-muted text-xs mt-0.5">MC Portete</p>
+          </div>
+        </div>
+      </div>
+          </div>
+          <div class="p-4">
+            <p class="font-medium text-sm text-white">Guayas Flow</p>
+            <p class="text-brand-muted text-xs mt-0.5">MC Portete</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ===== ARTISTAS POPULARES ===== -->
+  <section id="artistas" class="py-24">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="mb-12 scroll-fade">
+        <span class="badge mb-3">Talento local</span>
+        <h2 class="text-6xl text-white">Artistas<br/>Populares</h2>
+      </div>
+      <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
+        <div class="text-center group cursor-pointer scroll-fade">
+          <div class="w-full aspect-square rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-brand-sky transition-all">
+            <img src="https://picsum.photos/id/64/200/200" alt="DJ Costanera" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
+          </div>
+          <p class="text-white text-xs font-medium">DJ Costanera</p>
+        </div>
+        <div class="text-center group cursor-pointer scroll-fade" style="transition-delay:0.05s">
+          <div class="w-full aspect-square rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-brand-sky transition-all">
+            <img src="https://picsum.photos/id/91/200/200" alt="Valeria Estrada" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
+          </div>
+          <p class="text-white text-xs font-medium">Valeria Estrada</p>
+        </div>
+        <div class="text-center group cursor-pointer scroll-fade" style="transition-delay:0.1s">
+          <div class="w-full aspect-square rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-brand-sky transition-all">
+            <img src="https://picsum.photos/id/177/200/200" alt="MC Portete" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
+          </div>
+          <p class="text-white text-xs font-medium">MC Portete</p>
+        </div>
+        <div class="text-center group cursor-pointer scroll-fade" style="transition-delay:0.15s">
+          <div class="w-full aspect-square rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-brand-sky transition-all">
+            <img src="https://picsum.photos/id/203/200/200" alt="Tropicana Beat" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
+          </div>
+          <p class="text-white text-xs font-medium">Tropicana Beat</p>
+        </div>
+        <div class="text-center group cursor-pointer scroll-fade" style="transition-delay:0.2s">
+          <div class="w-full aspect-square rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-brand-sky transition-all">
+            <img src="https://picsum.photos/id/1080/200/200" alt="Antena 5 Indie" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
+          </div>
+          <p class="text-white text-xs font-medium">Antena 5 Indie</p>
+        </div>
+        <div class="text-center group cursor-pointer scroll-fade" style="transition-delay:0.25s">
+          <div class="w-full aspect-square rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-brand-sky transition-all">
+            <img src="https://picsum.photos/id/342/200/200" alt="Los Cantores del Río" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
+          </div>
+          <p class="text-white text-xs font-medium">Los Cantores</p>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ===== PRÓXIMOS EVENTOS ===== -->
+  <section id="eventos" class="py-24 bg-[#0d0d0d]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="mb-12 scroll-fade">
+        <span class="badge mb-3">En vivo</span>
+        <h2 class="text-6xl text-white">Próximos<br/>Eventos</h2>
+      </div>
+      <div class="space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center gap-4 p-5 bg-brand-card border border-brand-border rounded-xl hover:border-brand-sky/50 transition-all scroll-fade">
+          <div class="flex-shrink-0 text-center w-16">
+            <p class="text-brand-sky text-3xl" style="font-family:'Bebas Neue';">14</p>
+            <p class="text-brand-muted text-xs uppercase tracking-widest">Jul</p>
+          </div>
+          <div class="w-px h-12 bg-brand-border hidden md:block"></div>
+          <div class="flex-1 min-w-0">
+            <p class="text-white font-medium">Noche Independiente GYE Vol. 3</p>
+            <p class="text-brand-muted text-sm mt-0.5">Malecón 2000, Guayaquil · 20:00</p>
+          </div>
+          <a href="#contacto" class="bg-brand-sky text-white text-xs font-medium px-5 py-2 rounded-full hover:bg-sky-600 transition-colors flex-shrink-0">Entradas</a>
+        </div>
+        <div class="flex flex-col md:flex-row md:items-center gap-4 p-5 bg-brand-card border border-brand-border rounded-xl hover:border-brand-sky/50 transition-all scroll-fade" style="transition-delay:0.08s">
+          <div class="flex-shrink-0 text-center w-16">
+            <p class="text-brand-sky text-3xl" style="font-family:'Bebas Neue';">22</p>
+            <p class="text-brand-muted text-xs uppercase tracking-widest">Jul</p>
+          </div>
+          <div class="w-px h-12 bg-brand-border hidden md:block"></div>
+          <div class="flex-1 min-w-0">
+            <p class="text-white font-medium">Feria del Sonido Costero</p>
+            <p class="text-brand-muted text-sm mt-0.5">Plaza Lagos, Samborondón · 17:00</p>
+          </div>
+          <a href="#contacto" class="border border-white/30 text-white text-xs font-medium px-5 py-2 rounded-full hover:border-brand-sky hover:text-brand-sky transition-all flex-shrink-0">Más info</a>
+        </div>
+        <div class="flex flex-col md:flex-row md:items-center gap-4 p-5 bg-brand-card border border-brand-border rounded-xl hover:border-brand-sky/50 transition-all scroll-fade" style="transition-delay:0.16s">
+          <div class="flex-shrink-0 text-center w-16">
+            <p class="text-brand-sky text-3xl" style="font-family:'Bebas Neue';">05</p>
+            <p class="text-brand-muted text-xs uppercase tracking-widest">Ago</p>
+          </div>
+          <div class="w-px h-12 bg-brand-border hidden md:block"></div>
+          <div class="flex-1 min-w-0">
+            <p class="text-white font-medium">SonicGYE Showcase — Talentos Nuevos</p>
+            <p class="text-brand-muted text-sm mt-0.5">La Paleta, Urdesa Central · 21:00</p>
+          </div>
+          <a href="#contacto" class="bg-brand-sky text-white text-xs font-medium px-5 py-2 rounded-full hover:bg-sky-600 transition-colors flex-shrink-0">Entradas</a>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ===== MENSAJES DE FANS (fetch GET + interacción) ===== -->
+  <section id="mensajes" class="py-24 bg-[#0d0d0d]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="mb-10 scroll-fade flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div>
+          <span class="badge mb-3">Comunidad</span>
+          <h2 class="text-6xl text-white">Mensajes</h2>
+        </div>
+        <button id="loadMsgsBtn" class="self-start md:self-auto inline-flex items-center gap-2 border border-white/30 text-white text-sm font-medium px-6 py-2.5 rounded-full hover:border-brand-sky hover:text-brand-sky transition-all">
+          <span id="loadMsgsLabel">Cargar mensajes</span>
+        </button>
+      </div>
+      <p class="text-brand-muted text-sm mb-2 scroll-fade">
+        Los mensajes que envías desde el formulario de contacto aparecen aquí en tiempo real. Pulsa "Cargar mensajes" para traer ejemplos del servidor.
+      </p>
+      <p id="msgCounter" class="text-brand-sky text-xs font-medium mb-6 scroll-fade">0 mensajes cargados</p>
+      <div id="messagesList" class="space-y-3 scroll-fade">
+        <p id="noMessages" class="text-brand-muted text-sm italic">Aún no hay mensajes cargados.</p>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ===== CONTACTO (fetch POST) ===== -->
+  <section id="contacto" class="py-24">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="mb-12 scroll-fade">
+        <span class="badge mb-3">Contrataciones</span>
+        <h2 class="text-6xl text-white">Contacto</h2>
+      </div>
+      <div class="grid md:grid-cols-2 gap-16">
+        <div class="scroll-fade">
+          <p class="text-brand-muted leading-relaxed mb-8">
+            ¿Eres artista, promotor, o quieres colaborar con SonicGYE? Escríbenos y te respondemos en menos de 48 horas.
+          </p>
+          <div class="space-y-4 text-sm">
+            <div class="flex items-center gap-3 text-brand-muted">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-brand-sky flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              hola@sonicgye.ec
+            </div>
+            <div class="flex items-center gap-3 text-brand-muted">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-brand-sky flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              Guayaquil, Ecuador
+            </div>
+            <div class="flex items-center gap-3 text-brand-muted">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-brand-sky flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+              +593 99 000 0000
+            </div>
+          </div>
+        </div>
+        <div class="scroll-fade" style="transition-delay:0.15s">
+          <form id="contactForm" class="space-y-4" novalidate>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <input type="text" id="nombre" name="nombre" placeholder="Nombre" class="px-4 py-3 rounded-xl text-sm w-full"/>
+                <p class="field-error hidden text-red-400 text-xs mt-1"></p>
+              </div>
+              <div>
+                <input type="email" id="email" name="email" placeholder="Email" class="px-4 py-3 rounded-xl text-sm w-full"/>
+                <p class="field-error hidden text-red-400 text-xs mt-1"></p>
+              </div>
+            </div>
+            <div>
+              <select id="asunto" name="asunto" class="w-full px-4 py-3 rounded-xl text-sm">
+                <option value="" disabled selected>Selecciona un asunto</option>
+                <option value="Quiero subir mi música">Quiero subir mi música</option>
+                <option value="Contratación de artista">Contratación de artista</option>
+                <option value="Propuesta de evento">Propuesta de evento</option>
+                <option value="Alianza o colaboración">Alianza o colaboración</option>
+                <option value="Otro">Otro</option>
+              </select>
+              <p class="field-error hidden text-red-400 text-xs mt-1"></p>
+            </div>
+            <div>
+              <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos en qué podemos ayudarte..." rows="4" class="w-full px-4 py-3 rounded-xl text-sm resize-none"></textarea>
+              <p class="field-error hidden text-red-400 text-xs mt-1"></p>
+            </div>
+            <button type="submit" id="submitBtn" class="w-full bg-brand-sky text-white font-medium py-3 rounded-xl hover:bg-sky-600 transition-colors flex items-center justify-center gap-2">
+              <span id="submitLabel">Enviar mensaje</span>
+            </button>
+            <p id="formStatus" class="text-sm hidden"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-brand-card border-t border-brand-border py-12">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-2">
+          <span class="text-brand-sky text-3xl" style="font-family:'Bebas Neue',sans-serif; line-height:1;">SONIC</span>
+          <span class="text-white text-3xl" style="font-family:'Bebas Neue',sans-serif; line-height:1;">GYE</span>
+        </div>
+        <nav class="flex flex-wrap justify-center gap-6 text-sm text-brand-muted">
+          <a href="#inicio" class="hover:text-white transition-colors">Inicio</a>
+          <a href="#artistas" class="hover:text-white transition-colors">Artistas</a>
+          <a href="#lanzamientos" class="hover:text-white transition-colors">Lanzamientos</a>
+          <a href="#eventos" class="hover:text-white transition-colors">Eventos</a>
+          <a href="#contacto" class="hover:text-white transition-colors">Contacto</a>
+        </nav>
+        <p class="text-brand-muted text-xs text-center">
+          © 2025 SonicGYE · Música independiente de Guayaquil
+        </p>
+      </div>
+    </div>
+  </footer>
+ 
+  <script>
+    /* ===== Scroll reveal ===== */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.scroll-fade').forEach(el => observer.observe(el));
+ 
+    /* ===== Mobile menu toggle ===== */
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      mobileMenu.classList.toggle('flex');
+    });
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('flex');
+      });
+    });
+ 
+    /* ===== Active nav link on scroll ===== */
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.dataset.section === id);
+          });
+        }
+      });
+    }, { rootMargin: '-50% 0px -50% 0px' });
+    sections.forEach(s => navObserver.observe(s));
+ 
+    /* ===== Filtro de búsqueda en Lanzamientos ===== */
+    const searchInput = document.getElementById('searchLanzamientos');
+    const trackCards = document.querySelectorAll('.track-card');
+    const noResultsLanzamientos = document.getElementById('noResultsLanzamientos');
+ 
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+      trackCards.forEach(card => {
+        const song = card.dataset.song.toLowerCase();
+        const artist = card.dataset.artist.toLowerCase();
+        const matches = song.includes(query) || artist.includes(query);
+        card.classList.toggle('hidden', !matches);
+        if (matches) visibleCount++;
+      });
+      noResultsLanzamientos.classList.toggle('hidden', visibleCount !== 0);
+    });
+ 
+    /* ===== Player con estado play/pause ===== */
+    let currentlyPlaying = null;
+ 
+    function setTrackPlaying(btn, playing) {
+      const iconPlay = btn.querySelector('.icon-play');
+      const iconPause = btn.querySelector('.icon-pause');
+      iconPlay.classList.toggle('hidden', playing);
+      iconPause.classList.toggle('hidden', !playing);
+      btn.classList.toggle('ring-2', playing);
+      btn.classList.toggle('ring-white/50', playing);
+    }
+ 
+    document.querySelectorAll('.play-btn[data-track-id]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const trackId = btn.dataset.trackId;
+        if (currentlyPlaying && currentlyPlaying !== btn) {
+          setTrackPlaying(currentlyPlaying, false);
+        }
+        const isPlaying = !btn.querySelector('.icon-pause').classList.contains('hidden');
+        if (isPlaying) {
+          setTrackPlaying(btn, false);
+          currentlyPlaying = null;
+        } else {
+          setTrackPlaying(btn, true);
+          currentlyPlaying = btn;
+        }
+      });
+    });
+ 
+    /* ===== Mensajes: estado local + fetch GET + render interactivo ===== */
+    const messagesList = document.getElementById('messagesList');
+    const noMessages = document.getElementById('noMessages');
+    const loadMsgsBtn = document.getElementById('loadMsgsBtn');
+    const loadMsgsLabel = document.getElementById('loadMsgsLabel');
+    const msgCounter = document.getElementById('msgCounter');
+ 
+    let localMessages = [];
+ 
+    function colorForAsunto(asunto) {
+      const map = {
+        'Quiero subir mi música': 'bg-brand-sky/20 text-sky-300 border-brand-sky/40',
+        'Contratación de artista': 'bg-amber-500/15 text-amber-300 border-amber-500/30',
+        'Propuesta de evento': 'bg-purple-500/15 text-purple-300 border-purple-500/30',
+        'Alianza o colaboración': 'bg-teal-500/15 text-teal-300 border-teal-500/30',
+        'Otro': 'bg-white/10 text-gray-300 border-white/20'
+      };
+      return map[asunto] || map['Otro'];
+    }
+ 
+    function renderMessages() {
+      msgCounter.textContent = localMessages.length === 1
+        ? '1 mensaje cargado'
+        : `${localMessages.length} mensajes cargados`;
+ 
+      if (localMessages.length === 0) {
+        messagesList.innerHTML = '';
+        messagesList.appendChild(noMessages);
+        return;
+      }
+      messagesList.innerHTML = '';
+      localMessages.forEach(msg => {
+        const card = document.createElement('div');
+        card.className = 'msg-enter p-5 bg-brand-card border border-brand-border rounded-xl flex flex-col gap-2';
+        card.innerHTML = `
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <p class="text-white font-medium text-sm">${msg.nombre}</p>
+            <span class="text-[11px] font-medium px-3 py-1 rounded-full border ${colorForAsunto(msg.asunto)}">${msg.asunto}</span>
+          </div>
+          <p class="text-brand-muted text-sm leading-relaxed">${msg.mensaje}</p>
+          <p class="text-brand-muted/60 text-xs">${msg.email}</p>
+        `;
+        messagesList.appendChild(card);
+      });
+    }
+ 
+    /* fetch GET — trae mensajes de ejemplo desde JSONPlaceholder y los adapta */
+    async function cargarMensajesDesdeServidor() {
+      loadMsgsBtn.disabled = true;
+      loadMsgsLabel.innerHTML = '<span class="spinner inline-block align-middle"></span>';
+      const oldErrorBtn = document.getElementById('retryMsgsBtn');
+      if (oldErrorBtn) oldErrorBtn.closest('.fetch-error').remove();
+ 
+      try {
+        const res = await fetch('https://jsonplaceholder.typicode.com/comments?postId=1');
+        if (!res.ok) throw new Error('Error de red');
+        const data = await res.json();
+        const asuntos = ['Quiero subir mi música', 'Contratación de artista', 'Propuesta de evento', 'Alianza o colaboración', 'Otro'];
+        const ejemplos = data.slice(0, 4).map((c, i) => ({
+          nombre: c.name.split(' ').slice(0, 2).join(' '),
+          email: c.email,
+          asunto: asuntos[i % asuntos.length],
+          mensaje: c.body.length > 140 ? c.body.slice(0, 140) + '…' : c.body
+        }));
+        localMessages = [...ejemplos, ...localMessages];
+        renderMessages();
+      } catch (err) {
+        const errorBox = document.createElement('div');
+        errorBox.className = 'fetch-error flex items-center justify-between gap-3 p-3 mb-3 bg-red-500/10 border border-red-500/30 rounded-xl';
+        errorBox.innerHTML = `
+          <p class="text-red-400 text-sm">No se pudieron cargar los mensajes.</p>
+          <button id="retryMsgsBtn" class="text-xs font-medium text-white bg-red-500/80 hover:bg-red-500 px-3 py-1.5 rounded-full transition-colors flex-shrink-0">Reintentar</button>
+        `;
+        messagesList.prepend(errorBox);
+        document.getElementById('retryMsgsBtn').addEventListener('click', cargarMensajesDesdeServidor);
+      } finally {
+        loadMsgsBtn.disabled = false;
+        loadMsgsLabel.textContent = 'Cargar mensajes';
+      }
+    }
+    loadMsgsBtn.addEventListener('click', cargarMensajesDesdeServidor);
+    renderMessages(); // inicializa el contador en 0
+ 
+    /* ===== Formulario de contacto — validación visible + fetch POST ===== */
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitLabel = document.getElementById('submitLabel');
+    const formStatus = document.getElementById('formStatus');
+ 
+    const fieldNombre = document.getElementById('nombre');
+    const fieldEmail = document.getElementById('email');
+    const fieldAsunto = document.getElementById('asunto');
+    const fieldMensaje = document.getElementById('mensaje');
+ 
+    function showFieldError(field, message) {
+      const errorEl = field.parentElement.querySelector('.field-error');
+      field.classList.add('field-invalid');
+      errorEl.textContent = message;
+      errorEl.classList.remove('hidden');
+    }
+ 
+    function clearFieldError(field) {
+      const errorEl = field.parentElement.querySelector('.field-error');
+      field.classList.remove('field-invalid');
+      errorEl.classList.add('hidden');
+    }
+ 
+    function validateForm() {
+      let isValid = true;
+      [fieldNombre, fieldEmail, fieldAsunto, fieldMensaje].forEach(clearFieldError);
+ 
+      if (fieldNombre.value.trim().length < 2) {
+        showFieldError(fieldNombre, 'Ingresa tu nombre.');
+        isValid = false;
+      }
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(fieldEmail.value.trim())) {
+        showFieldError(fieldEmail, 'Email inválido.');
+        isValid = false;
+      }
+      if (!fieldAsunto.value) {
+        showFieldError(fieldAsunto, 'Selecciona un asunto.');
+        isValid = false;
+      }
+      if (fieldMensaje.value.trim().length < 10) {
+        showFieldError(fieldMensaje, 'Escribe al menos 10 caracteres.');
+        isValid = false;
+      }
+      return isValid;
+    }
+ 
+    [fieldNombre, fieldEmail, fieldAsunto, fieldMensaje].forEach(field => {
+      field.addEventListener('input', () => clearFieldError(field));
+      field.addEventListener('change', () => clearFieldError(field));
+    });
+ 
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+ 
+      if (!validateForm()) return;
+ 
+      const nombre = fieldNombre.value.trim();
+      const email = fieldEmail.value.trim();
+      const asunto = fieldAsunto.value;
+      const mensaje = fieldMensaje.value.trim();
+ 
+      submitBtn.disabled = true;
+      submitLabel.innerHTML = '<span class="spinner inline-block align-middle"></span>';
+      formStatus.classList.add('hidden');
+ 
+      try {
+        const res = await fetch('https://jsonplaceholder.typicode.com/posts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nombre, email, asunto, mensaje })
+        });
+        if (!res.ok) throw new Error('Error al enviar');
+        await res.json();
+ 
+        localMessages.unshift({ nombre, email, asunto, mensaje });
+        renderMessages();
+ 
+        formStatus.textContent = '¡Mensaje enviado! Revisa la sección "Mensajes" para verlo.';
+        formStatus.className = 'text-sm text-teal-400';
+        formStatus.classList.remove('hidden');
+        contactForm.reset();
+      } catch (err) {
+        formStatus.textContent = 'Hubo un error al enviar tu mensaje. Intenta de nuevo.';
+        formStatus.className = 'text-sm text-red-400';
+        formStatus.classList.remove('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        submitLabel.textContent = 'Enviar mensaje';
+      }
+    });
+  </script>
+</body>
+</html>
