@@ -4,11 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SonicGYE — Música Independiente de Guayaquil</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
   <script>
-    tailwind.config = {
+    window.tailwind = window.tailwind || {};
+    window.tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
@@ -33,7 +34,7 @@
     h1,h2,h3,h4,h5 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; }
     .hero-bg {
       background-image: linear-gradient(to bottom, rgba(10,10,10,0.5) 0%, rgba(10,10,10,0.97) 100%),
-        url('https://picsum.photos/id/1041/1600/1200');
+        url('/images/hero-bg.svg');
       background-size: cover;
       background-position: center;
     }
@@ -137,7 +138,7 @@
   <section class="py-24">
     <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
       <div class="scroll-fade">
-        <img src="https://picsum.photos/id/1062/700/875" alt="Artistas independientes de Guayaquil en concierto" class="rounded-2xl w-full object-cover aspect-[4/5]"/>
+        <img src="/images/value.svg" alt="Artistas independientes de Guayaquil en concierto" class="rounded-2xl w-full object-cover aspect-[4/5]"/>
       </div>
       <div class="scroll-fade" style="transition-delay:0.1s">
         <span class="badge mb-4">¿Por qué SonicGYE?</span>
@@ -184,7 +185,7 @@
       <div id="lanzamientosGrid" class="grid grid-cols-2 md:grid-cols-4 gap-5">
         <div class="track-card card-hover bg-brand-card border border-brand-border rounded-xl overflow-hidden scroll-fade" data-song="Marea Baja" data-artist="Los Cantores del Río">
           <div class="relative">
-            <img src="https://picsum.photos/id/1059/400/400" alt="Portada Marea Baja" class="w-full aspect-square object-cover"/>
+            <img src="/images/cover.svg" alt="Portada Marea Baja" class="w-full aspect-square object-cover"/>
             <button class="play-btn absolute bottom-3 right-3" data-track-id="marea-baja" aria-label="Reproducir Marea Baja">
               <svg class="icon-play w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               <svg class="icon-pause w-4 h-4 text-white hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
@@ -197,7 +198,7 @@
         </div>
         <div class="track-card card-hover bg-brand-card border border-brand-border rounded-xl overflow-hidden scroll-fade" style="transition-delay:0.1s" data-song="Puerto Real" data-artist="Valeria Estrada">
           <div class="relative">
-            <img src="https://picsum.photos/id/1025/400/400" alt="Portada Puerto Real" class="w-full aspect-square object-cover"/>
+            <img src="/images/cover.svg" alt="Portada Puerto Real" class="w-full aspect-square object-cover"/>
             <button class="play-btn absolute bottom-3 right-3" data-track-id="puerto-real" aria-label="Reproducir Puerto Real">
               <svg class="icon-play w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               <svg class="icon-pause w-4 h-4 text-white hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
@@ -210,7 +211,7 @@
         </div>
         <div class="track-card card-hover bg-brand-card border border-brand-border rounded-xl overflow-hidden scroll-fade" style="transition-delay:0.2s" data-song="Ciudad Gris" data-artist="Antena 5 Indie">
           <div class="relative">
-            <img src="https://picsum.photos/id/1074/400/400" alt="Portada Ciudad Gris" class="w-full aspect-square object-cover"/>
+            <img src="/images/cover.svg" alt="Portada Ciudad Gris" class="w-full aspect-square object-cover"/>
             <button class="play-btn absolute bottom-3 right-3" data-track-id="ciudad-gris" aria-label="Reproducir Ciudad Gris">
               <svg class="icon-play w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               <svg class="icon-pause w-4 h-4 text-white hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
@@ -223,7 +224,7 @@
         </div>
         <div class="track-card card-hover bg-brand-card border border-brand-border rounded-xl overflow-hidden scroll-fade" style="transition-delay:0.3s" data-song="Guayas Flow" data-artist="MC Portete">
           <div class="relative">
-            <img src="https://picsum.photos/id/1080/400/400" alt="Portada Guayas Flow" class="w-full aspect-square object-cover"/>
+            <img src="/images/cover.svg" alt="Portada Guayas Flow" class="w-full aspect-square object-cover"/>
             <button class="play-btn absolute bottom-3 right-3" data-track-id="guayas-flow" aria-label="Reproducir Guayas Flow">
               <svg class="icon-play w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               <svg class="icon-pause w-4 h-4 text-white hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
@@ -255,37 +256,37 @@
       <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
         <div class="text-center group cursor-pointer scroll-fade">
           <div class="w-full aspect-square rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-brand-sky transition-all">
-            <img src="https://picsum.photos/id/64/200/200" alt="DJ Costanera" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
+            <img src="/images/avatar.svg" alt="DJ Costanera" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
           </div>
           <p class="text-white text-xs font-medium">DJ Costanera</p>
         </div>
         <div class="text-center group cursor-pointer scroll-fade" style="transition-delay:0.05s">
           <div class="w-full aspect-square rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-brand-sky transition-all">
-            <img src="https://picsum.photos/id/91/200/200" alt="Valeria Estrada" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
+            <img src="/images/avatar.svg" alt="Valeria Estrada" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
           </div>
           <p class="text-white text-xs font-medium">Valeria Estrada</p>
         </div>
         <div class="text-center group cursor-pointer scroll-fade" style="transition-delay:0.1s">
           <div class="w-full aspect-square rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-brand-sky transition-all">
-            <img src="https://picsum.photos/id/177/200/200" alt="MC Portete" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
+            <img src="/images/avatar.svg" alt="MC Portete" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
           </div>
           <p class="text-white text-xs font-medium">MC Portete</p>
         </div>
         <div class="text-center group cursor-pointer scroll-fade" style="transition-delay:0.15s">
           <div class="w-full aspect-square rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-brand-sky transition-all">
-            <img src="https://picsum.photos/id/203/200/200" alt="Tropicana Beat" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
+            <img src="/images/avatar.svg" alt="Tropicana Beat" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
           </div>
           <p class="text-white text-xs font-medium">Tropicana Beat</p>
         </div>
         <div class="text-center group cursor-pointer scroll-fade" style="transition-delay:0.2s">
           <div class="w-full aspect-square rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-brand-sky transition-all">
-            <img src="https://picsum.photos/id/1080/200/200" alt="Antena 5 Indie" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
+            <img src="/images/avatar.svg" alt="Antena 5 Indie" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
           </div>
           <p class="text-white text-xs font-medium">Antena 5 Indie</p>
         </div>
         <div class="text-center group cursor-pointer scroll-fade" style="transition-delay:0.25s">
           <div class="w-full aspect-square rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-brand-sky transition-all">
-            <img src="https://picsum.photos/id/342/200/200" alt="Los Cantores del Río" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
+            <img src="/images/avatar.svg" alt="Los Cantores del Río" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"/>
           </div>
           <p class="text-white text-xs font-medium">Los Cantores</p>
         </div>
@@ -449,7 +450,9 @@
     </div>
   </footer>
  
-  <script>
+  <script type="module">
+    import { loadContactMessages, saveContactMessage } from './src/firebase.js';
+
     /* ===== Scroll reveal ===== */
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
@@ -537,7 +540,7 @@
       });
     });
  
-    /* ===== Mensajes: estado local + fetch GET + render interactivo ===== */
+    /* ===== Mensajes: estado local + Firebase GET + render interactivo ===== */
     const messagesList = document.getElementById('messagesList');
     const noMessages = document.getElementById('noMessages');
     const loadMsgsBtn = document.getElementById('loadMsgsBtn');
@@ -583,25 +586,15 @@
       });
     }
  
-    /* fetch GET — trae mensajes de ejemplo desde JSONPlaceholder y los adapta */
-    async function cargarMensajesDesdeServidor() {
+    /* Firebase GET — trae mensajes guardados en Realtime Database */
+    async function cargarMensajesDesdeFirebase() {
       loadMsgsBtn.disabled = true;
       loadMsgsLabel.innerHTML = '<span class="spinner inline-block align-middle"></span>';
       const oldErrorBtn = document.getElementById('retryMsgsBtn');
       if (oldErrorBtn) oldErrorBtn.closest('.fetch-error').remove();
  
       try {
-        const res = await fetch('https://jsonplaceholder.typicode.com/comments?postId=1');
-        if (!res.ok) throw new Error('Error de red');
-        const data = await res.json();
-        const asuntos = ['Quiero subir mi música', 'Contratación de artista', 'Propuesta de evento', 'Alianza o colaboración', 'Otro'];
-        const ejemplos = data.slice(0, 4).map((c, i) => ({
-          nombre: c.name.split(' ').slice(0, 2).join(' '),
-          email: c.email,
-          asunto: asuntos[i % asuntos.length],
-          mensaje: c.body.length > 140 ? c.body.slice(0, 140) + '…' : c.body
-        }));
-        localMessages = [...ejemplos, ...localMessages];
+        localMessages = await loadContactMessages();
         renderMessages();
       } catch (err) {
         const errorBox = document.createElement('div');
@@ -611,16 +604,16 @@
           <button id="retryMsgsBtn" class="text-xs font-medium text-white bg-red-500/80 hover:bg-red-500 px-3 py-1.5 rounded-full transition-colors flex-shrink-0">Reintentar</button>
         `;
         messagesList.prepend(errorBox);
-        document.getElementById('retryMsgsBtn').addEventListener('click', cargarMensajesDesdeServidor);
+        document.getElementById('retryMsgsBtn').addEventListener('click', cargarMensajesDesdeFirebase);
       } finally {
         loadMsgsBtn.disabled = false;
         loadMsgsLabel.textContent = 'Cargar mensajes';
       }
     }
-    loadMsgsBtn.addEventListener('click', cargarMensajesDesdeServidor);
+    loadMsgsBtn.addEventListener('click', cargarMensajesDesdeFirebase);
     renderMessages(); // inicializa el contador en 0
  
-    /* ===== Formulario de contacto — validación visible + fetch POST ===== */
+    /* ===== Formulario de contacto — validación visible + Firebase POST ===== */
     const contactForm = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
     const submitLabel = document.getElementById('submitLabel');
@@ -688,15 +681,9 @@
       formStatus.classList.add('hidden');
  
       try {
-        const res = await fetch('https://jsonplaceholder.typicode.com/posts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nombre, email, asunto, mensaje })
-        });
-        if (!res.ok) throw new Error('Error al enviar');
-        await res.json();
- 
-        localMessages.unshift({ nombre, email, asunto, mensaje });
+        const savedMessage = await saveContactMessage({ nombre, email, asunto, mensaje });
+
+        localMessages.unshift(savedMessage);
         renderMessages();
  
         formStatus.textContent = '¡Mensaje enviado! Revisa la sección "Mensajes" para verlo.';
