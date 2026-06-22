@@ -1,7 +1,13 @@
 // src/firebase.js
 // Esta versión usa fetch() directo contra el REST API de Firebase Realtime Database.
 
-const DATABASE_URL = import.meta.env.VITE_FIREBASE_DATABASE_URL;
+const DATABASE_URL = import.meta.env.VITE_FIREBASE_DATABASE_URL?.replace(/\/$/, "");
+
+if (!DATABASE_URL) {
+  throw new Error(
+    "Falta VITE_FIREBASE_DATABASE_URL en el archivo .env para cargar los mensajes."
+  );
+}
 
 const MESSAGES_ENDPOINT = `${DATABASE_URL}/messages.json`;
 
